@@ -9,7 +9,7 @@ const authenticate = () => {
   const authUrl = `https://unsplash.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
   window.location.href = authUrl;
 };
-authenticate();
+// authenticate();
 </script>
 
 <template>
