@@ -33,4 +33,5 @@ export interface IGallery {
   links: ILinks;
   user: IUser;
   urls: IUrls;
+  liked_by_user: boolean
 }
