@@ -15,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
     component: FavoritePhotosVue,
   },
   {
-    path: "/favorite/:id",
+    path: "/photos/:id",
     name: "photo",
     component: OnePhotoPageVue,
   },
