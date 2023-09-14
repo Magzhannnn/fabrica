@@ -3,11 +3,14 @@ import { IGallery } from "@/types/Photos";
 import Container from "@/UI/Container.vue";
 import { onMounted, onUnmounted, ref } from "vue";
 import UpArrow from "./UpArrow.vue";
+import { mainUrl, queryClientId } from "@/properties/properties";
 
+const inputSerach = ref("");
 const galleryPhotos = ref<IGallery[]>([]);
 
-const url =
-  "https://api.unsplash.com/photos/random?client_id=uw9S5MD7KkobPW8E_1s_jTc_k1KTS3A8sIRrVuS6FbE&count=8";
+const url = `${mainUrl}/random${queryClientId}&count=8`;
+
+console.log(url);
 
 fetch(url)
   .then((res) => res.json())
@@ -19,11 +22,13 @@ fetch(url)
 
 const isLoading = ref(false);
 
-async function fetchData() {
+async function fetchData(query: string) {
   isLoading.value = true;
   try {
-    const response = await fetch(url);
+    const response = await fetch(`${url}&query=${query}`);
+
     const data: IGallery[] = await response.json();
+    console.log(data);
 
     galleryPhotos.value = [...galleryPhotos.value, ...data];
   } catch (error) {
@@ -33,14 +38,14 @@ async function fetchData() {
   }
 }
 
-function handleScroll() {
+const handleScroll = () => {
   const scrollPosition = window.innerHeight + window.scrollY;
   const documentHeight = document.documentElement.scrollHeight;
 
   if (scrollPosition >= documentHeight && !isLoading.value) {
-    fetchData();
+    fetchData(inputSerach.value);
   }
-}
+};
 
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
@@ -51,8 +56,16 @@ onUnmounted(() => {
 });
 
 onMounted(() => {
-  fetchData();
+  fetchData(inputSerach.value);
 });
+
+const searchHandler = async () => {
+  if (!inputSerach.value.length) return;
+  console.log("input search is not empty");
+
+  galleryPhotos.value = [];
+  await fetchData(inputSerach.value.toLowerCase());
+};
 </script>
 
 <template>
@@ -65,10 +78,12 @@ onMounted(() => {
       id="default-search"
       class="block w-full py-5 pl-[34px] text-2xl text-black placeholder:text-black outline-none border border-black"
       placeholder="Поиск"
+      v-model="inputSerach"
       required
     />
     <div
-      class="absolute right-[30px] inset-y-0 flex items-center pl-3 pointer-events-none"
+      @click="searchHandler"
+      class="absolute hover:cursor-pointer right-[30px] inset-y-0 flex items-center pl-3"
     >
       <svg
         class="w-6 h-6 text-gray-500"
@@ -90,13 +105,14 @@ onMounted(() => {
 
   <Container>
     <div
-      class="my-[106px] w-[99%] mx-auto flex flex-wrap items-center justify-start gap-6 overflow-auto hideScroll"
+      class="my-[106px] w-[99%] mx-auto flex flex-wrap items-center justify-center mobile:justify-around tablet:justify-start gap-6 overflow-auto hideScroll"
     >
       <img
-        class="w-[32%] h-[400px] flex-row bg-gray-400 rounded-lg"
-        :src="photo.urls.full"
+        class="w-[90%] mobile:w-[40%] tablet:w-[32%] h-[300px] tablet:h-[400px] flex-row bg-gray-400 rounded-lg hover:cursor-pointer"
+        :src="photo.urls.regular"
         :alt="photo.alt_description"
         v-for="photo in galleryPhotos"
+        @click="$router.push({ name: 'photo', params: { id: photo.id } })"
       />
     </div>
     <div v-if="isLoading" class="text-center my-5">Загрузка...</div>

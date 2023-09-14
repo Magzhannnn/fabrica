@@ -1,6 +1,7 @@
 import FavoritePhotosVue from "@/views/FavoritePhotos.vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import MainPage from "../views/MainPage.vue";
+import OnePhotoPageVue from "@/views/OnePhotoPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -12,6 +13,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/favorite",
     name: "favorite",
     component: FavoritePhotosVue,
+  },
+  {
+    path: "/favorite/:id",
+    name: "photo",
+    component: OnePhotoPageVue,
   },
 ];
 
