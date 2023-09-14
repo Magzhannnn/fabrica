@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import NavbarPage from "@/components/NavbarPage.vue";
+import { clientId } from "./properties/properties";
 
-const clientId = "57xo2P4_9QBm23AGRjnQoXOQOuf2Mj2R-a8hYmm_XB8";
 const redirectUri = "https://fabrica-kohl.vercel.app/";
 const scope = "read_user"; // Ваши разрешения
 
